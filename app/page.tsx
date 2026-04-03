@@ -15,9 +15,9 @@ export default function Home() {
           muted
           loop
           playsInline
-          poster="/images/thumbnails/hero_thumb.jpg"
+          poster={`${process.env.NEXT_PUBLIC_BASE_PATH}/images/thumbnails/hero_thumb.jpg`}
         >
-          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+          <source src={`${process.env.NEXT_PUBLIC_BASE_PATH}/videos/hero-bg.mp4`} type="video/mp4" />
         </video>
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>
