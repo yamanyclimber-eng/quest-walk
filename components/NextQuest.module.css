@@ -1,0 +1,162 @@
+.section {
+    padding: var(--spacing-xxl) 0;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    /* 夕焼けのようなドラマチックな背景 */
+    background-size: 200% 200%;
+    animation: gradientBG 15s ease infinite;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-top: 4px solid #fff;
+    border-bottom: 4px solid #fff;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+    position: relative;
+    z-index: 2;
+}
+
+.titleWrapper {
+    margin-bottom: var(--spacing-xxl);
+}
+
+.subLabel {
+    display: inline-block;
+    background-color: #f1c40f;
+    color: #000;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: var(--spacing-sm);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    font-family: var(--font-pixel);
+    font-size: 1.2rem;
+}
+
+.mainTitle {
+    font-family: var(--font-pixel);
+    font-size: 3rem;
+    text-shadow: 4px 4px 0 #000;
+    line-height: 1.2;
+}
+
+.questCard {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 4px solid #fff;
+    padding: var(--spacing-xl);
+    border-radius: 8px;
+    box-shadow:
+        0 0 0 4px rgba(0, 0, 0, 0.5),
+        0 20px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--spacing-xl);
+    backdrop-filter: blur(5px);
+}
+
+.infoGroup {
+    text-align: left;
+}
+
+.infoLabel {
+    color: #f1c40f;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.infoValue {
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: var(--font-pixel);
+}
+
+.difficulty {
+    color: #e74c3c;
+}
+
+.actions {
+    margin-top: var(--spacing-xxl);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.buttonPrimary {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 16px 32px;
+    border: 2px solid #fff;
+    font-family: var(--font-pixel);
+    font-size: 1.5rem;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 #000;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.buttonPrimary:hover {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 0 #000;
+}
+
+.buttonSecondary {
+    background-color: transparent;
+    color: #fff;
+    padding: 16px 32px;
+    border: 2px solid #fff;
+    font-family: var(--font-pixel);
+    font-size: 1.5rem;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.buttonSecondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(2px);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+    .mainTitle {
+        font-size: 2rem;
+    }
+
+    .questCard {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .buttonPrimary,
+    .buttonSecondary {
+        text-align: center;
+    }
+}

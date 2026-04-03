@@ -1,0 +1,122 @@
+.registerWrapper {
+    min-height: calc(100vh - var(--header-height));
+    padding: var(--spacing-xl) var(--spacing-md);
+    background-color: var(--background-color);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: var(--rpg-blue);
+    font-size: 2.5rem;
+}
+
+.formBox {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.loginPrompt {
+    background: #fffbe6;
+    border: 2px dashed #ffe58f;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    border-radius: 4px;
+}
+
+.formGroup {
+    margin-bottom: var(--spacing-lg);
+}
+
+.label {
+    display: block;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #fff;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 12px;
+    background-color: #000;
+    border: 2px solid #fff;
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: 1.1rem;
+    outline: none;
+}
+
+.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: #ffff00;
+}
+
+.submitButton {
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: #d32f2f;
+    /* RPG Boss fight red? */
+    color: #fff;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 2px #000, inset 0 0 0 2px #000;
+    font-family: var(--font-pixel);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.submitButton:hover {
+    transform: scale(1.02);
+    background-color: #b71c1c;
+}
+
+.submitButton:active {
+    transform: scale(0.98);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .registerWrapper {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .input,
+    .textarea {
+        font-size: 1rem;
+        padding: var(--spacing-sm);
+        min-height: 44px;
+    }
+
+    .submitButton {
+        font-size: 1.2rem;
+        min-height: 48px;
+    }
+
+    .loginPrompt {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .submitButton {
+        font-size: 1.1rem;
+    }
+}

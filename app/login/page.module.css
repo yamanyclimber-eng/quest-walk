@@ -1,0 +1,159 @@
+.loginWrapper {
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, #000033 0%, #000066 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add some digital rain or stars effect in background if possible, 
+   but for now a clean gradient and centered box is fine */
+
+.loginBox {
+    width: 100%;
+    max-width: 450px;
+    animation: boxEnter 0.5s ease-out;
+}
+
+@keyframes boxEnter {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.title {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: #ffff00;
+    text-shadow: 2px 2px 0 #000;
+    font-size: 2rem;
+}
+
+.formGroup {
+    margin-bottom: var(--spacing-md);
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    background-color: #000;
+    border: 2px solid #fff;
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: 1.2rem;
+    outline: none;
+}
+
+.input:focus {
+    border-color: #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.actions {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.loginButton {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--rpg-blue);
+    color: #fff;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 2px #000, inset 0 0 0 2px #000;
+    font-family: var(--font-pixel);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.loginButton:hover {
+    background-color: #0000ff;
+    transform: translateY(-2px);
+}
+
+.loginButton:active {
+    transform: translateY(0);
+}
+
+.forgotPassword {
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.forgotPassword:hover {
+    color: #ffff00;
+    text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .loginWrapper {
+        padding: var(--spacing-md);
+    }
+
+    .loginBox {
+        padding: var(--spacing-lg);
+        max-width: 100%;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .loginButton {
+        font-size: 1rem;
+        padding: var(--spacing-md);
+        min-height: 48px;
+    }
+
+    .inputGroup label {
+        font-size: 1rem;
+    }
+
+    .inputGroup input {
+        font-size: 1rem;
+        padding: var(--spacing-sm);
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .loginButton {
+        font-size: 0.95rem;
+    }
+}
+
+.footer {
+    margin-top: var(--spacing-xl);
+    text-align: center;
+}
+
+.backLink {
+    color: #fff;
+    text-decoration: underline;
+    font-size: 1rem;
+}

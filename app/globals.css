@@ -1,0 +1,72 @@
+:root {
+  /* Color Palette - Nature Inspired */
+  --primary-color: #2E5D36;
+  /* Forest Green */
+  --secondary-color: #8B5A2B;
+  /* Earthy Brown */
+  --accent-color: #D4A373;
+  /* Sand/Beige */
+  --background-color: #FDFBF7;
+  /* Off-white / Cream */
+  --text-color: #333333;
+  /* Dark Grey */
+  --light-text: #FFFFFF;
+
+  /* RPG Theme Colors */
+  --rpg-blue: #0000AA;
+  --rpg-border-white: #FFFFFF;
+  --rpg-border-outer: #FFFFFF;
+  --rpg-border-inner: #000000;
+
+  /* Typography */
+  --font-main: var(--font-noto), sans-serif;
+  --font-pixel: var(--font-pixel), "DotGothic16", sans-serif;
+
+  /* Spacing */
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 32px;
+  --spacing-xl: 64px;
+
+  /* Layout */
+  --max-width: 1200px;
+  --header-height: 80px;
+}
+
+/* RPG Window Utility */
+.rpgWindow {
+  background-color: var(--rpg-blue);
+  border: 4px solid var(--rpg-border-white);
+  box-shadow:
+    0 0 0 2px var(--rpg-border-inner),
+    inset 0 0 0 2px var(--rpg-border-inner);
+  color: white;
+  padding: var(--spacing-md);
+  image-rendering: pixelated;
+  font-family: var(--font-pixel);
+}
+
+.pixelText {
+  font-family: var(--font-pixel);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: var(--font-main);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

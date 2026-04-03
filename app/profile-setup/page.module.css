@@ -1,0 +1,185 @@
+.setupWrapper {
+    min-height: calc(100vh - var(--header-height));
+    padding: var(--spacing-xl) var(--spacing-md);
+    background-color: var(--background-color);
+}
+
+.setupBox {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+    color: var(--rpg-blue);
+    font-size: 2.2rem;
+    margin-bottom: var(--spacing-lg);
+}
+
+.formSection {
+    margin-bottom: var(--spacing-xl);
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    color: #ffff00;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: 8px;
+    border-bottom: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.formGroup {
+    margin-bottom: var(--spacing-md);
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: 12px;
+    background-color: #000;
+    border: 2px solid #fff;
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: 1rem;
+}
+
+.input:focus,
+.select:focus {
+    border-color: #ffff00;
+    outline: none;
+}
+
+/* Party Member Cards */
+.partyList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.partyCard {
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md);
+    border: 2px solid #fff;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.removeButton {
+    background: #d32f2f;
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 4px 8px;
+    font-family: var(--font-pixel);
+    cursor: pointer;
+}
+
+.addButton {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: 12px;
+    background: none;
+    border: 2px dashed #fff;
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.addButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-style: solid;
+}
+
+.submitButton {
+    width: 100%;
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-md);
+    background-color: var(--rpg-blue);
+    color: #fff;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 2px #000, inset 0 0 0 2px #000;
+    font-family: var(--font-pixel);
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.submitButton:hover {
+    background-color: #0000ff;
+    transform: translateY(-2px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .setupWrapper {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.3rem;
+    }
+
+    .input,
+    .select {
+        font-size: 1rem;
+        padding: var(--spacing-sm);
+        min-height: 44px;
+    }
+
+    .submitButton {
+        font-size: 1.3rem;
+        min-height: 48px;
+    }
+
+    .addButton {
+        font-size: 1rem;
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .sectionTitle {
+        font-size: 1.1rem;
+    }
+
+    .submitButton {
+        font-size: 1.1rem;
+    }
+}

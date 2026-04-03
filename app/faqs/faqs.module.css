@@ -1,0 +1,146 @@
+.main {
+    padding: var(--spacing-xxl) 0;
+    min-height: calc(100vh - var(--header-height));
+    background-color: var(--background-color);
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232c3e50' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.title {
+    font-size: 3rem;
+    font-family: var(--font-pixel);
+    color: var(--rpg-blue);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    text-shadow: 2px 2px 0 #fff;
+    border-bottom: 4px double var(--rpg-blue);
+    display: inline-block;
+    padding: 0 var(--spacing-lg);
+}
+
+/* タイトルをセンター配置にするためのラッパーが必要ない場合、text-align:centerが効くように親で調整 */
+.container>h1 {
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.description {
+    text-align: center;
+    margin-bottom: var(--spacing-xxl);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    background-color: #fff;
+    padding: var(--spacing-lg);
+    border: 2px solid var(--rpg-blue);
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.faqList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* RPGのクエストボード（依頼書）風デザイン */
+.faqItem {
+    background-color: #fff;
+    padding: var(--spacing-lg);
+    border: 4px solid var(--rpg-blue);
+    position: relative;
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.faqItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.faqItem::before {
+    /* 左上のピン留め風装飾 */
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    border: 2px solid #c0392b;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.question {
+    font-size: 1.3rem;
+    color: var(--rpg-blue);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    font-family: var(--font-pixel);
+    border-bottom: 2px dashed #eee;
+    padding-bottom: var(--spacing-sm);
+}
+
+.qIcon {
+    background-color: var(--rpg-blue);
+    color: #ffd700;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: bold;
+    flex-shrink: 0;
+    font-family: var(--font-pixel);
+    border: 2px solid #000;
+    box-shadow: 2px 2px 0 #000;
+}
+
+.answer {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #333;
+    padding-left: 0;
+    /* アイコン分のインデントはflex-gapで解決 */
+    margin-left: 48px;
+    /* Qアイコンの幅(32+border4+gap)に合わせて調整 */
+    position: relative;
+}
+
+.backButtonWrapper {
+    margin-top: var(--spacing-xxl);
+    text-align: center;
+}
+
+.backButton {
+    display: inline-block;
+    padding: 16px 32px;
+    background-color: var(--rpg-blue);
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 0 #000;
+    transition: all 0.1s;
+    font-family: var(--font-pixel);
+    font-size: 1.2rem;
+}
+
+.backButton:hover {
+    background-color: #34495e;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #000;
+}

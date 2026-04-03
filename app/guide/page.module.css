@@ -1,0 +1,139 @@
+.guideWrapper {
+    min-height: calc(100vh - var(--header-height));
+    padding: var(--spacing-xl) var(--spacing-md);
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.guideBox {
+    width: 100%;
+    max-width: 800px;
+    animation: slideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.title {
+    text-align: center;
+    color: #ffff00;
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-lg);
+    text-shadow: 2px 2px 0 #000;
+}
+
+.content {
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.section {
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    border-left: 4px solid #ffff00;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.benefitTitle {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.benefitTitle::before {
+    content: '★';
+    color: #ffff00;
+}
+
+.footer {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.ctaButton {
+    background-color: var(--rpg-blue);
+    color: #fff;
+    padding: 1rem 2rem;
+    border: 4px solid #fff;
+    box-shadow: 0 0 0 2px #000, inset 0 0 0 2px #000;
+    font-family: var(--font-pixel);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ctaButton:hover {
+    background-color: #0000ff;
+    transform: scale(1.05);
+}
+
+.backLink {
+    color: #fff;
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.backLink:hover {
+    opacity: 1;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .guideWrapper {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .content {
+        font-size: 1.1rem;
+    }
+
+    .benefitTitle {
+        font-size: 1.3rem;
+    }
+
+    .ctaButton {
+        font-size: 1.2rem;
+        padding: var(--spacing-md) var(--spacing-lg);
+        min-height: 48px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .content {
+        font-size: 1rem;
+    }
+
+    .benefitTitle {
+        font-size: 1.1rem;
+    }
+
+    .ctaButton {
+        font-size: 1.1rem;
+        width: 100%;
+    }
+}
