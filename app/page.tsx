@@ -23,8 +23,7 @@ export default function Home() {
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>クエストウォーク</h1>
           <p className={styles.heroSubtitle}>
-            親子で歩く15kmの旅。<br />
-            自然の中で共に汗を流し、絆を深める特別な一日を。
+            「体力、タフネス、感性」を磨く冒険に出よう！
           </p>
           <Link href="/register" className={styles.ctaButton}>
             イベントに参加する
