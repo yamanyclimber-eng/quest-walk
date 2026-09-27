@@ -21,7 +21,11 @@ export default function Home() {
         </video>
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>クエストウォーク</h1>
+          <h1 className={styles.heroTitle}>
+            QUEST WALK
+            <br />
+            <span className={styles.heroTitleKana}>クエストウォーク</span>
+          </h1>
           <p className={styles.heroSubtitle}>
             「体力、タフネス、感性」を磨く冒険に出よう！
           </p>

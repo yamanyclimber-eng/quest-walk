@@ -118,6 +118,12 @@
   animation: fadeIn 1s ease-out forwards, glow 2s ease-in-out infinite alternate;
 }
 
+.heroTitleKana {
+  display: inline-block;
+  font-size: 0.4em;
+  letter-spacing: 0.2em;
+}
+
 .heroSubtitle {
   font-family: var(--font-pixel);
   font-size: 1.8rem;
