@@ -107,6 +107,7 @@
   font-family: var(--font-pixel);
   font-size: 6.5rem;
   font-weight: 900;
+  line-height: 1;
   margin-bottom: var(--spacing-md);
   letter-spacing: 0.15em;
   color: #FFD700;
@@ -120,7 +121,9 @@
 
 .heroTitleKana {
   display: inline-block;
+  margin-top: 0.1em;
   font-size: 0.4em;
+  line-height: 1;
   letter-spacing: 0.2em;
 }
 
