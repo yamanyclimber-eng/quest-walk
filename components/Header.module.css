@@ -70,6 +70,14 @@
     color: #ffff00;
 }
 
+.userStatus {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
 .navLink::before {
     content: '▶';
     position: absolute;

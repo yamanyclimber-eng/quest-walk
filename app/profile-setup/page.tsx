@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/Providers';
 
 interface PartyMember {
     id: number;
@@ -14,6 +15,7 @@ interface PartyMember {
 
 export default function ProfileSetupPage() {
     const router = useRouter();
+    const { user, loading: authLoading } = useAuth();
 
     const [profile, setProfile] = useState({
         nickname: '',
@@ -24,6 +26,15 @@ export default function ProfileSetupPage() {
     const [party, setParty] = useState<PartyMember[]>([
         { id: Date.now(), nickname: '', birthDate: '', gender: 'none' }
     ]);
+
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!authLoading && !user) {
+            router.replace('/login');
+        }
+    }, [authLoading, user, router]);
 
     const addPartyMember = () => {
         setParty([...party, { id: Date.now(), nickname: '', birthDate: '', gender: 'none' }]);
@@ -45,11 +56,37 @@ export default function ProfileSetupPage() {
         ));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert('王国の名簿に登録されました！');
-        router.push('/register'); // Redirect to registration page
+        setSubmitting(true);
+        setError(null);
+        try {
+            const res = await fetch('/api/profile', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({
+                    nickname: profile.nickname,
+                    birthDate: profile.birthDate,
+                    address: profile.address,
+                    partyMembers: party.map(({ nickname, birthDate, gender }) => ({ nickname, birthDate, gender })),
+                }),
+            });
+            if (res.status === 401) {
+                router.replace('/login');
+                return;
+            }
+            if (!res.ok) throw new Error('failed');
+            router.push('/register');
+        } catch {
+            setError('登録に失敗しました。もう一度お試しください。');
+        } finally {
+            setSubmitting(false);
+        }
     };
+
+    if (authLoading || !user) {
+        return null;
+    }
 
     return (
         <div className={styles.setupWrapper}>
@@ -169,8 +206,11 @@ export default function ProfileSetupPage() {
                             </button>
                         </div>
 
-                        <button type="submit" className={styles.submitButton}>
-                            この情報で冒険者登録を完了する！
+                        {error && (
+                            <p style={{ textAlign: 'center', color: '#ff6b6b', marginBottom: '1rem' }}>{error}</p>
+                        )}
+                        <button type="submit" className={styles.submitButton} disabled={submitting}>
+                            {submitting ? '登録中...' : 'この情報で冒険者登録を完了する！'}
                         </button>
                     </form>
 

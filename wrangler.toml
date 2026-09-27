@@ -1,0 +1,11 @@
+name = "quest-walk"
+compatibility_date = "2026-09-27"
+pages_build_output_dir = "out"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "quest-walk-db"
+database_id = "001e982d-4784-4526-901b-20f09be64ae5"
+
+[vars]
+ENVIRONMENT = "development"

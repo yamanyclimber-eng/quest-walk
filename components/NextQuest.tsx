@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styles from './NextQuest.module.css';
+import { NEXT_EVENT_LABEL, NEXT_EVENT_PLACE } from '@/lib/nextEvent';
 
 export default function NextQuest() {
     return (
@@ -13,11 +14,11 @@ export default function NextQuest() {
                 <div className={styles.questCard}>
                     <div className={styles.infoGroup}>
                         <div className={styles.infoLabel}>開催日</div>
-                        <div className={styles.infoValue}>2026.04.15</div>
+                        <div className={styles.infoValue}>{NEXT_EVENT_LABEL}</div>
                     </div>
                     <div className={styles.infoGroup}>
                         <div className={styles.infoLabel}>場所</div>
-                        <div className={styles.infoValue}>高尾山エリア</div>
+                        <div className={styles.infoValue}>{NEXT_EVENT_PLACE}</div>
                     </div>
                     <div className={styles.infoGroup}>
                         <div className={styles.infoLabel}>距離</div>
