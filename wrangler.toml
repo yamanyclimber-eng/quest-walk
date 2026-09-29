@@ -7,5 +7,9 @@ binding = "DB"
 database_name = "quest-walk-db"
 database_id = "001e982d-4784-4526-901b-20f09be64ae5"
 
-[vars]
-ENVIRONMENT = "development"
+# ENVIRONMENT is intentionally NOT set here. This file is committed and
+# deployed via Cloudflare's Git integration, which re-applies [vars] on
+# every deploy — a value here would silently overwrite whatever is set
+# in the Cloudflare dashboard for production. Local-only dev values go
+# in .dev.vars (gitignored) instead; production's ENVIRONMENT=production
+# is set directly in the Cloudflare Pages dashboard.
