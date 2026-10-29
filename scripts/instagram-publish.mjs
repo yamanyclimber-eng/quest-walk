@@ -115,7 +115,13 @@ async function validate(meta, caption) {
         try { await stat(path.join(IMAGES_DIR, img)); } catch { errors.push(`画像が見つかりません: public/instagram/${img}`); }
     }
 
-    if (!caption) errors.push('本文（キャプション）が空です');
+    if (meta.type === 'story') {
+        // ストーリーは本文を付けられない。写真1枚か動画1本だけ
+        if (caption) errors.push('ストーリーには本文を付けられません（--- の下は空にしてください）');
+        if (images.length > 1) errors.push('ストーリーは画像1枚だけです');
+    } else if (!caption) {
+        errors.push('本文（キャプション）が空です');
+    }
     if ([...caption].length > MAX_CAPTION) errors.push(`本文が${MAX_CAPTION}文字を超えています（今: ${[...caption].length}文字）`);
     const tags = caption.match(/#[^\s#]+/g) || [];
     if (tags.length > MAX_HASHTAGS) errors.push(`ハッシュタグは最大${MAX_HASHTAGS}個です（今: ${tags.length}個）`);
@@ -163,6 +169,12 @@ async function publishReel(userId, videoFile, coverUrl, caption) {
     if (coverUrl) params.cover_url = coverUrl;
     const { id: creationId } = await api('POST', `${userId}/media`, params);
 
+    await uploadVideo(creationId, videoFile);
+    await waitUntilReady(creationId, 120); // 動画の処理は数分かかることがある（最大10分待つ）
+    return finishPublish(userId, creationId);
+}
+
+async function uploadVideo(creationId, videoFile) {
     const data = await readFile(path.join(VIDEOS_DIR, videoFile));
     const res = await fetch(`https://rupload.facebook.com/ig-api-upload/${API_VERSION}/${creationId}`, {
         method: 'POST',
@@ -173,15 +185,26 @@ async function publishReel(userId, videoFile, coverUrl, caption) {
     if (!res.ok || json.success === false) {
         throw new Error(`動画のアップロードに失敗しました: ${json.debug_info?.message || json.error?.message || res.status}`);
     }
-
-    await waitUntilReady(creationId, 120); // 動画の処理は数分かかることがある（最大10分待つ）
-    return finishPublish(userId, creationId);
 }
 
 async function finishPublish(userId, creationId) {
     const { id: mediaId } = await api('POST', `${userId}/media_publish`, { creation_id: creationId });
-    const { permalink } = await api('GET', mediaId, { fields: 'permalink' });
+    // 投稿はもう済んでいるので、URL が取れなくても失敗扱いにしない
+    const { permalink } = await api('GET', mediaId, { fields: 'permalink' }).catch(() => ({ permalink: '' }));
     return { mediaId, permalink };
+}
+
+async function publishStory(userId, imageUrl, videoFile) {
+    let creationId;
+    if (videoFile) {
+        ({ id: creationId } = await api('POST', `${userId}/media`, { media_type: 'STORIES', upload_type: 'resumable' }));
+        await uploadVideo(creationId, videoFile);
+        await waitUntilReady(creationId, 120);
+    } else {
+        ({ id: creationId } = await api('POST', `${userId}/media`, { media_type: 'STORIES', image_url: imageUrl }));
+        await waitUntilReady(creationId);
+    }
+    return finishPublish(userId, creationId);
 }
 
 async function publishImages(userId, imageUrls, caption) {
@@ -236,7 +259,9 @@ async function main() {
         }
         const at = parseJst(meta.publish_at);
         if (CHECK_ONLY) {
-            const kind = meta.video ? `リール ${meta.video}` : `画像${meta.images.length}枚`;
+            const kind = meta.type === 'story'
+                ? `ストーリー ${meta.video || meta.images[0]}`
+                : meta.video ? `リール ${meta.video}` : `画像${meta.images.length}枚`;
             console.log(`✓ ${file}  →  ${meta.publish_at}（日本時間）に投稿予定 / ${kind}`);
         } else if (at <= now) {
             due.push({ file, full, text, meta, caption });
@@ -272,7 +297,9 @@ async function main() {
         }
 
         try {
-            const { mediaId, permalink } = meta.video
+            const { mediaId, permalink } = meta.type === 'story'
+                ? await publishStory(userId, imageUrls[0], meta.video)
+                : meta.video
                 ? await publishReel(userId, meta.video, imageUrls[0], post.caption)
                 : await publishImages(userId, imageUrls, post.caption);
             await writeFile(post.full, setMeta(post.text, {
