@@ -29,43 +29,37 @@ GitHub Actions（30分おき）… 投稿時刻を過ぎた予約を Instagram A
 
 ## はじめに1回だけ必要な設定
 
-### 1. Instagram をプロアカウントに切り替える（無料・数分）
+Facebook ページ経由の方式です。一度設定すればトークンは期限切れにならないので、更新作業はいりません。
 
-Instagram アプリ → プロフィール → ≡ → **アカウントの種類とツール** → **プロアカウントに切り替える**
-→ 「クリエイター」か「ビジネス」を選ぶ（どちらでも自動投稿できます。イベント運営なら「ビジネス」がおすすめ）。
-フォロワーや投稿はそのまま残ります。Facebook ページとの連携は**不要**です。
+### 1. Instagram をプロアカウントにする（@quest.walk は設定済み）
 
-### 2. Meta のアプリを作ってアクセストークンを発行する（無料）
+### 2. Facebook ページを作って Instagram とリンクする（無料）
 
-1. [Meta for Developers](https://developers.facebook.com/) に Facebook アカウントでログインし、開発者登録する
-2. 「マイアプリ」→「アプリを作成」→ ユースケースで **「Instagram でメッセージとコンテンツを管理」** を選ぶ
-3. アプリの「Instagram ログインによる API 設定」→「アカウントを追加」でクエストウォークの Instagram アカウントを追加
-4. 「トークンを生成」でアクセストークンをコピー（`instagram_business_content_publish` の権限が含まれていること）
+1. Facebook で「クエストウォーク」のページを作る（メニュー → ページ → 新しいページを作成）
+2. ページの設定 →「リンク済みのアカウント」→ Instagram → @quest.walk をリンク
+
+### 3. Meta のアプリでトークンを発行する（無料）
+
+1. [Meta for Developers](https://developers.facebook.com/apps/) のアプリ「Quest Walk Poster」（作成済み）を開く
+2. [グラフAPIエクスプローラ](https://developers.facebook.com/tools/explorer/) で、アプリに「Quest Walk Poster」を選ぶ
+3. アクセス許可に次を追加して「Generate Access Token」→ Facebook の画面でクエストウォークのページと @quest.walk を選んで許可
+   `instagram_basic` `instagram_content_publish` `pages_show_list` `pages_read_engagement` `business_management`
+4. このユーザートークンを長期トークンに交換し、そこからページのアクセストークンを取り出す（期限なしになる）
+   ※ 3〜4 は Claude が画面を見ながら一緒に進めます
 
 アプリは「開発モード」のままで大丈夫です（自分のアカウントにだけ投稿するため、Meta の審査は不要）。
-※画面の名前は Meta 側の変更で少し違うことがあります。迷ったら Claude に「ブラウザで一緒に設定して」と頼んでください。
 
-### 3. GitHub にトークンを登録する
+### 4. GitHub にトークンを登録する
 
 GitHub のリポジトリ `yamanyclimber-eng/quest-walk` → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**
 
 | Name | 値 |
 |---|---|
-| `IG_ACCESS_TOKEN` | 手順2でコピーしたトークン |
-| `GH_PAT` | 下の手順で作るトークン（トークンの自動更新用） |
+| `IG_ACCESS_TOKEN` | 手順3で取り出したページのアクセストークン |
 
-**GH_PAT の作り方**：GitHub 右上のアイコン → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token
-- Repository access：`quest-walk` だけを選ぶ
-- Permissions：**Secrets** を「Read and write」
-- 有効期限：最長（1年）にして、カレンダーに更新日をメモ
+### 5. 動作確認
 
-> Instagram のトークンは60日で切れます。「Instagram トークン更新」ワークフローが毎週自動で延長します。
-> GH_PAT を設定しない場合は、50日おきくらいに手順2をやり直して `IG_ACCESS_TOKEN` を貼り替えてください。
-
-### 4. 動作確認
-
-GitHub の **Actions** タブ → 「Instagram トークン更新」→ **Run workflow** → 緑のチェックになれば設定完了です。
-（「Instagram 自動投稿」も同じように手動実行できます。予約がなければ「投稿時刻になった予約はありません」と出ます）
+GitHub の **Actions** タブ → 「Instagram 自動投稿」→ **Run workflow**。予約がなければ「投稿時刻になった予約はありません」と出ます。
 
 ## 注意
 

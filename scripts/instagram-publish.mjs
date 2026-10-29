@@ -2,7 +2,7 @@
 // Instagram 予約投稿スクリプト
 //
 // instagram/posts/*.md のうち status: scheduled かつ publish_at を過ぎたものを
-// Instagram API (Instagram ログイン方式) で投稿し、ファイルを status: published に書き換える。
+// Instagram API（Facebook ページ経由の方式）で投稿し、ファイルを status: published に書き換える。
 // 写真（images:）はサイト上のURLを Instagram に取り込ませ、
 // リール（video:）は instagram/videos/ のファイルを Instagram に直接アップロードする
 // （Cloudflare Pages は1ファイル25MBまでのため、動画はサイトに置かない）。
@@ -22,8 +22,9 @@ const IMAGES_DIR = path.join(ROOT, 'public', 'instagram');
 const VIDEOS_DIR = path.join(ROOT, 'instagram', 'videos');
 
 const SITE_URL = (process.env.SITE_URL || 'https://quest-walk.pages.dev').replace(/\/$/, '');
-const API_VERSION = process.env.IG_API_VERSION || 'v23.0';
-const API = `https://graph.instagram.com/${API_VERSION}`;
+const API_VERSION = process.env.IG_API_VERSION || 'v26.0';
+const API = `https://graph.facebook.com/${API_VERSION}`;
+// IG_ACCESS_TOKEN は Facebook ページのアクセストークン（期限なし）。そのページにリンクされた Instagram に投稿する
 const TOKEN = process.env.IG_ACCESS_TOKEN;
 const CHECK_ONLY = process.argv.includes('--check');
 const MAX_PER_RUN = 3;
@@ -228,6 +229,12 @@ async function publishImages(userId, imageUrls, caption) {
     return finishPublish(userId, creationId);
 }
 
+async function igAccount() {
+    const { instagram_business_account: ig } = await api('GET', 'me', { fields: 'instagram_business_account{id,username}' });
+    if (!ig) throw new Error('トークンの Facebook ページに Instagram アカウントがリンクされていません');
+    return ig;
+}
+
 // ---- main -----------------------------------------------------------------
 
 async function main() {
@@ -276,12 +283,17 @@ async function main() {
 
     if (due.length === 0) {
         console.log('投稿時刻になった予約はありません');
+        // 手動実行（Run workflow）のときは、トークンで Instagram につながるかだけ確認する
+        if (TOKEN && process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
+            const { username } = await igAccount();
+            console.log(`接続確認OK: @${username} に投稿できる状態です`);
+        }
         if (hasErrors) process.exit(1);
         return;
     }
     if (!TOKEN) throw new Error('IG_ACCESS_TOKEN が設定されていません');
 
-    const { user_id: userId, username } = await api('GET', 'me', { fields: 'user_id,username' });
+    const { id: userId, username } = await igAccount();
     console.log(`@${username} に投稿します`);
 
     for (const post of due.slice(0, MAX_PER_RUN)) {
