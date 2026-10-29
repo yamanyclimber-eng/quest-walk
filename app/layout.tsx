@@ -6,8 +6,8 @@ const notoSansJP = Noto_Sans_JP({ subsets: ['latin'], variable: '--font-noto' })
 const dotGothic = DotGothic16({ weight: '400', subsets: ['latin'], variable: '--font-pixel' })
 
 export const metadata: Metadata = {
-  title: 'クエストウォーク | 親子で歩く15km',
-  description: '月に2回開催される、親子で絆を深める15kmの山道ウォーキングイベント。',
+  title: 'クエストウォーク | 沖縄・南城市の歩く冒険',
+  description: '沖縄県南城市で毎月2回開催。6〜17kmの道のりを歩き、子供の体力・メンタル・感性を磨く「歩く冒険」です。',
 }
 
 import Header from '@/components/Header'

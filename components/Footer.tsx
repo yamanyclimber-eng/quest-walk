@@ -34,7 +34,7 @@ export default function Footer() {
                         <div className={styles.socialIcons}>
                             {/* アイコンはテキストで代用しますが、FontAwesomeなどが一般的です */}
                             <a href="#" className={styles.socialIcon} aria-label="Twitter">X</a>
-                            <a href="#" className={styles.socialIcon} aria-label="Instagram">IG</a>
+                            <a href="https://www.instagram.com/quest.walk/" className={styles.socialIcon} aria-label="Instagram" target="_blank" rel="noopener noreferrer">IG</a>
                             <span className={styles.socialIcon} style={{ opacity: 0.5, cursor: 'not-allowed' }} aria-label="LINE(準備中)">LN</span>
                         </div>
                         <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', opacity: 0.8 }}>

@@ -22,7 +22,7 @@ export default function NextQuest() {
                     </div>
                     <div className={styles.infoGroup}>
                         <div className={styles.infoLabel}>距離</div>
-                        <div className={styles.infoValue}>15km / 30km</div>
+                        <div className={styles.infoValue}>6〜17km</div>
                     </div>
                     <div className={styles.infoGroup}>
                         <div className={styles.infoLabel}>難易度</div>

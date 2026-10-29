@@ -40,13 +40,13 @@ export default function Home() {
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>イベントについて</h2>
           <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
-            「クエストウォーク」は、親子で挑戦する15kmの山道ウォーキングイベントです。
-            普段の生活では味わえない達成感と、親子の対話を生み出します。
+            「クエストウォーク」は、沖縄県南城市で毎月2回開催している『歩く冒険』です。
+            6〜17kmの道のりを5〜6時間かけて歩き、子供たちの体力・メンタル・感性を磨きます。
           </p>
 
           <div className={styles.features}>
             <div className={styles.featureCard}>
-              <h3 className={styles.featureTitle}>15kmの挑戦</h3>
+              <h3 className={styles.featureTitle}>6〜17kmの挑戦</h3>
               <p>平坦な道だけではありません。山道を歩き抜くことで、子供たちの自信とたくましさを育みます。</p>
             </div>
             <div className={styles.featureCard}>

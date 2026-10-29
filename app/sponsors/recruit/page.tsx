@@ -25,7 +25,7 @@ export default function RecruitSponsors() {
             <div className={styles.heroSection}>
                 <h1 className={styles.mainTitle}>⚔️ スポンサー募集中 ⚔️</h1>
                 <p className={styles.subtitle}>
-                    「クエストウォーク」は、親子で挑戦する15kmの冒険。<br />
+                    「クエストウォーク」は、沖縄県南城市で毎月2回開催する『歩く冒険』。<br />
                     この特別な体験を一緒に創り上げてくださるパートナーを募集しています。
                 </p>
 
