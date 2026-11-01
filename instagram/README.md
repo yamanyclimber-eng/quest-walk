@@ -66,14 +66,13 @@ GitHub のリポジトリ `yamanyclimber-eng/quest-walk` → **Settings** → **
 GitHub の定期実行は数時間遅れることがあるので、Cloudflare の Cron Trigger（時間に正確）で5分おきに見回ります。
 
 1. GitHub → Settings → Developer settings → Fine-grained tokens で、このリポジトリだけを対象に
-   **Contents: Read-only** と **Actions: Read and write** を持つトークンを作る。
-2. Cloudflare ダッシュボード → Workers & Pages → 作成 → Worker（名前 `quest-walk-cron`）を作り、
-   コードを `instagram/cron-worker/worker.js` の中身に置き換えてデプロイ。
-3. Worker の設定 → 変数とシークレット に、シークレット `GITHUB_TOKEN`（1 のトークン）を追加。
-4. Worker の設定 → トリガー → Cron Trigger に `*/5 * * * *` を追加。
-5. Worker の URL をブラウザで開くと見回りを1回行い、「投稿時刻を過ぎた予約はありません」などと表示されます。
+   **Contents: Read-only** と **Actions: Read and write** を持つトークンを作る（設定済み: quest-walk-instagram-cron、期限なし）。
+2. `instagram/cron-worker/` で `npx wrangler login` → `npx wrangler deploy`（Worker 名 `quest-walk-cron`、Cron `*/5 * * * *` は `wrangler.toml` に書いてある）。
+3. Cloudflare ダッシュボード → Workers & Pages → quest-walk-cron → 設定 → 変数とシークレット に、
+   シークレット `GITHUB_TOKEN`（1 のトークン）を追加。
+4. https://quest-walk-cron.yamanyclimber.workers.dev を開くと見回りを1回行い、「投稿時刻を過ぎた予約はありません」などと表示されます。
 
-※ `worker.js` を書き換えたら、ダッシュボードで貼り直してデプロイしてください（push だけでは反映されません）。
+※ `worker.js` を書き換えたら、もう一度 `npx wrangler deploy` してください（push だけでは反映されません）。シークレットは消えません。
 
 ### 6. 動作確認
 
