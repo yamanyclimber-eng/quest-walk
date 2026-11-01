@@ -2,7 +2,9 @@ name: Instagram 自動投稿
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # 30分おき（GitHub の混雑で数分〜十数分遅れることがあります）
+    # 予備の見回り。GitHub の混雑で数時間遅れることがあるので、ふだんは
+    # instagram/cron-worker（Cloudflare）が5分おきに確認して workflow_dispatch で起動する
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +18,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+      # 順番待ちの間に別の実行が投稿結果を記録していても二重投稿しないよう、最新の main を取る
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:

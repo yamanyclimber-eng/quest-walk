@@ -7,23 +7,27 @@ Claude Code でこのフォルダを開き、こんなふうに頼むだけで�
 > 「来週の水曜19時に、2月のリトルドラゴンコースの告知を投稿したい。写真はこれ → ～」
 
 Claude が投稿文を作って見せる → OK を出す → 画像と予約ファイルを用意 → push してよいか聞かれる → OK、で予約完了です。
-予約時刻を過ぎると30分以内に自動で投稿されます。
+予約時刻を過ぎると5〜10分以内に自動で投稿されます。
 
 ## しくみ
 
 ```
 instagram/posts/○○.md        … 予約ファイル（投稿日時・画像・本文）
 public/instagram/○○/1.jpg    … 投稿する画像（サイト quest-walk.pages.dev 上に公開される）
-instagram/videos/○○.mp4      … リールの動画（サイトには公開されず、Instagram に直接アップロード）
+public/instagram/○○/reel.mp4 … リールの動画（25MBまで。写真と同じくサイトの URL から取り込ませる）
         │ push
         ▼
-GitHub Actions（30分おき）… 投稿時刻を過ぎた予約を Instagram API で投稿
+Cloudflare Worker（5分おき）… 投稿時刻を過ぎた予約があれば GitHub Actions を起動（instagram/cron-worker/）
+        │
+        ▼
+GitHub Actions … 投稿時刻を過ぎた予約を Instagram API で投稿
         │
         ▼
 予約ファイルが status: published に書き換わり、投稿のURL（permalink）が記録される
 ```
 
-- 費用はかかりません（GitHub Actions・Instagram API・Cloudflare Pages すべて無料の範囲）。
+- 費用はかかりません（GitHub Actions・Instagram API・Cloudflare Pages / Workers すべて無料の範囲）。
+- GitHub Actions 自身の定期実行（30分おき設定）も予備として残してあります。ただし GitHub の混雑で数時間遅れることがあるので、時間どおりの投稿は Cloudflare 側が担当します。
 - 画像は Instagram に取り込ませるため、サイト上の `https://quest-walk.pages.dev/instagram/...` に公開されます。
 - 投稿に失敗すると `status: error` になり、理由が `error:` に書かれます。GitHub からメールでも通知が来ます。
 
@@ -57,15 +61,29 @@ GitHub のリポジトリ `yamanyclimber-eng/quest-walk` → **Settings** → **
 |---|---|
 | `IG_ACCESS_TOKEN` | 手順3で取り出したページのアクセストークン |
 
-### 5. 動作確認
+### 5. 見回り役（Cloudflare Worker）
+
+GitHub の定期実行は数時間遅れることがあるので、Cloudflare の Cron Trigger（時間に正確）で5分おきに見回ります。
+
+1. GitHub → Settings → Developer settings → Fine-grained tokens で、このリポジトリだけを対象に
+   **Contents: Read-only** と **Actions: Read and write** を持つトークンを作る。
+2. Cloudflare ダッシュボード → Workers & Pages → 作成 → Worker（名前 `quest-walk-cron`）を作り、
+   コードを `instagram/cron-worker/worker.js` の中身に置き換えてデプロイ。
+3. Worker の設定 → 変数とシークレット に、シークレット `GITHUB_TOKEN`（1 のトークン）を追加。
+4. Worker の設定 → トリガー → Cron Trigger に `*/5 * * * *` を追加。
+5. Worker の URL をブラウザで開くと見回りを1回行い、「投稿時刻を過ぎた予約はありません」などと表示されます。
+
+※ `worker.js` を書き換えたら、ダッシュボードで貼り直してデプロイしてください（push だけでは反映されません）。
+
+### 6. 動作確認
 
 GitHub の **Actions** タブ → 「Instagram 自動投稿」→ **Run workflow**。予約がなければ「投稿時刻になった予約はありません」と出ます。
 
 ## 注意
 
 - 予約ファイルを作ったら必ず push してください。push しないと予約されません。
-- 投稿時刻の直前に push した場合、サイトの更新（1〜2分）が終わってから投稿されます。
-- 公開リポジトリで60日間まったく更新がないと、GitHub が定期実行を自動停止することがあります。その場合は Actions タブで再度有効にしてください。
+- 予約ファイルと写真は、投稿時刻の**10分以上前**に push してください。サイトの更新（写真の公開）が終わる前に投稿が始まると、Instagram が写真を取り込めずエラーになります。
+- 公開リポジトリで60日間まったく更新がないと、GitHub が予備の定期実行を自動停止することがあります（Cloudflare 側の見回りは止まりません）。
 - Instagram の制限：画像は JPEG・最大10枚、縦横比は 4:5〜1.91:1、本文2200文字・ハッシュタグ30個まで。
 - ストーリー：予約ファイルに `type: story` を書く。画像1枚か動画1本、本文なし。リンクスタンプは自動投稿では付けられません。
 - リール：MP4/MOV・3秒〜15分・300MB まで（GitHub に置ける上限は100MBなので、それ以上は圧縮）。投稿はフィードにも表示されます。

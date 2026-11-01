@@ -104,12 +104,14 @@ RPG用語（パーティ、ボス、レベルアップなど）を無理に足�
    - `sips -g pixelWidth -g pixelHeight` で縦横を確認。**縦長は 4:5（例 1080×1350）まで、横長は 1.91:1 まで**。
      それより縦長な写真（スマホの 9:16 など）は Instagram に拒否されるので、`sips -c <高さ> <幅>` で 4:5 に切り抜く（どこを残すか迷う場合はユーザーに確認）。
    - 1枚 8MB 以下。
-   **リール（動画）の場合**：動画は `instagram/videos/<名前>.mp4` に置く（サイトには公開されない）。
+   **リール（動画）の場合**：動画は `public/instagram/<名前>/reel.mp4` に置き、**25MB 以下**に圧縮する（Cloudflare Pages の1ファイル上限）。
+   `instagram/videos/` に置く直接アップロード方式は、Facebook ページのトークンでは「Request processing failed」で失敗したので使わない。
+   動画づくりは `quest-walk/.tools/make_reel.py`（ffmpeg 入りの `.tools/video-venv` で実行）を使える。
    - MP4 か MOV、縦 9:16（1080×1920）推奨、3秒〜15分、300MB 以下。
    - 長さとサイズは `mdls -name kMDItemDurationSeconds -name kMDItemPixelWidth -name kMDItemPixelHeight 動画.mp4` と `ls -lh` で確認。
    - 大きすぎる場合は Mac 標準の `avconvert` で圧縮する：
      ```bash
-     avconvert --source 元の動画.MOV --preset Preset1920x1080 --output instagram/videos/<名前>.mp4
+     avconvert --source 元の動画.MOV --preset Preset1920x1080 --output public/instagram/<名前>/reel.mp4
      ```
    - 表紙を選びたいときは JPEG を `public/instagram/<名前>/cover.jpg` に置き、予約ファイルに `cover:` を書く（省略すると Instagram が自動で選ぶ）。
    - GitHub は1ファイル100MBまでなので、それを超える動画は圧縮してから置く。
@@ -127,7 +129,7 @@ RPG用語（パーティ、ボス、レベルアップなど）を無理に足�
    ストーリーなら `type: story` を足し、画像1枚（または `video:` 1本）にして、`---` の下の本文は空にする（ストーリーに本文は付けられない。リンクスタンプも API では付けられないので、申込方法は画像の中に書く）。
    ストーリー画像は 1080×1920。上端・下端の約250pxはインスタの表示が重なるので、大事な文字を置かない。
    リールなら `images:` の代わりに `video: <名前>.mp4`（必要なら `cover: <名前>/cover.jpg`）を書く。
-   - 日時は日本時間。投稿は予約時刻から30分以内（GitHub の混み具合で多少遅れる）。
+   - 日時は日本時間。投稿は予約時刻から5〜10分以内（Cloudflare の見回り役 `instagram/cron-worker/` が5分おきに確認して起動する）。
    - ユーザーがまだ迷っているときは `status: draft` にしておく（draft は投稿されない）。
 4. `node scripts/instagram-publish.mjs --check` でチェック。
 
