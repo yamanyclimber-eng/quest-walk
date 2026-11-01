@@ -33,6 +33,7 @@ const MAX_CAPTION = 2200;
 const MAX_HASHTAGS = 30;
 const MAX_IMAGES = 10;
 const MAX_VIDEO_BYTES = 300 * 1024 * 1024;
+const MAX_PUBLIC_VIDEO_BYTES = 25 * 1024 * 1024;
 
 // ---- frontmatter ----------------------------------------------------------
 
@@ -97,11 +98,13 @@ async function validate(meta, caption) {
     if (meta.video) {
         if (images.length) errors.push('images と video はどちらか一方だけにしてください');
         if (!/\.(mp4|mov)$/i.test(meta.video)) errors.push(`リールは MP4 か MOV にしてください: ${meta.video}`);
-        try {
-            const { size } = await stat(path.join(VIDEOS_DIR, meta.video));
-            if (size > MAX_VIDEO_BYTES) errors.push(`動画が300MBを超えています: ${meta.video}`);
-        } catch {
-            errors.push(`動画が見つかりません: instagram/videos/${meta.video}`);
+        const src = await videoSource(meta.video);
+        if (!src) {
+            errors.push(`動画が見つかりません: public/instagram/${meta.video} か instagram/videos/${meta.video}`);
+        } else if (src.url && src.size > MAX_PUBLIC_VIDEO_BYTES) {
+            errors.push(`サイトに置く動画は25MBまでです（Cloudflare Pages の制限）: ${meta.video}`);
+        } else if (src.size > MAX_VIDEO_BYTES) {
+            errors.push(`動画が300MBを超えています: ${meta.video}`);
         }
         if (meta.cover && !/\.jpe?g$/i.test(meta.cover)) errors.push(`カバー画像は JPEG にしてください: ${meta.cover}`);
         if (meta.cover) {
@@ -165,12 +168,33 @@ async function imageIsLive(url) {
     return res.ok && (res.headers.get('content-type') || '').includes('image/jpeg');
 }
 
-async function publishReel(userId, videoFile, coverUrl, caption) {
-    const params = { media_type: 'REELS', upload_type: 'resumable', share_to_feed: 'true', caption };
-    if (coverUrl) params.cover_url = coverUrl;
-    const { id: creationId } = await api('POST', `${userId}/media`, params);
+const siteUrl = (file) => `${SITE_URL}/instagram/${file.split('/').map(encodeURIComponent).join('/')}`;
 
-    await uploadVideo(creationId, videoFile);
+// 動画の置き場所: public/instagram/ にあればサイトの URL から取り込ませる（確実）。
+// instagram/videos/ にあれば Instagram に直接アップロードする（25MB を超える動画用）。
+async function videoSource(file) {
+    for (const [dir, isPublic] of [[IMAGES_DIR, true], [VIDEOS_DIR, false]]) {
+        try {
+            const { size } = await stat(path.join(dir, file));
+            return isPublic ? { url: siteUrl(file), size } : { local: file, size };
+        } catch { /* 次の場所を探す */ }
+    }
+    return null;
+}
+
+async function createVideoContainer(userId, videoFile, params) {
+    const src = await videoSource(videoFile);
+    if (src.url) return (await api('POST', `${userId}/media`, { ...params, video_url: src.url })).id;
+    const { id } = await api('POST', `${userId}/media`, { ...params, upload_type: 'resumable' });
+    await uploadVideo(id, src.local);
+    return id;
+}
+
+async function publishReel(userId, videoFile, coverUrl, caption) {
+    const params = { media_type: 'REELS', share_to_feed: 'true', caption };
+    if (coverUrl) params.cover_url = coverUrl;
+    const creationId = await createVideoContainer(userId, videoFile, params);
+
     await waitUntilReady(creationId, 120); // 動画の処理は数分かかることがある（最大10分待つ）
     return finishPublish(userId, creationId);
 }
@@ -198,8 +222,7 @@ async function finishPublish(userId, creationId) {
 async function publishStory(userId, imageUrl, videoFile) {
     let creationId;
     if (videoFile) {
-        ({ id: creationId } = await api('POST', `${userId}/media`, { media_type: 'STORIES', upload_type: 'resumable' }));
-        await uploadVideo(creationId, videoFile);
+        creationId = await createVideoContainer(userId, videoFile, { media_type: 'STORIES' });
         await waitUntilReady(creationId, 120);
     } else {
         ({ id: creationId } = await api('POST', `${userId}/media`, { media_type: 'STORIES', image_url: imageUrl }));
